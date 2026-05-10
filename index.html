@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PURPOSE OF LIVING CALCULATOR</title>
+    <style>
+        :root {
+            --neon-green: #39ff14;
+            --neon-pink: #ff00ff;
+            --electric-blue: #00ffff;
+            --bg-dark: #050505;
+            --panel-bg: #111;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--neon-green);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            text-shadow: 0 0 10px var(--neon-green);
+            margin: 10px 0;
+        }
+
+        .credits {
+            color: var(--neon-pink);
+            font-size: 0.9em;
+            text-shadow: 0 0 5px var(--neon-pink);
+            margin-bottom: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 1800px;
+            gap: 20px;
+        }
+
+        .input-section {
+            flex: 2;
+            background: var(--panel-bg);
+            border: 2px solid var(--electric-blue);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 15px var(--electric-blue) inset;
+            height: 600px;
+            overflow-y: auto;
+        }
+
+        .terminal-section {
+            flex: 1;
+            background: #000;
+            border: 2px solid var(--neon-pink);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 15px var(--neon-pink) inset;
+            display: flex;
+            flex-direction: column;
+            min-width: 400px;
+        }
+
+        .category-block {
+            margin-bottom: 20px;
+            border-bottom: 1px dashed var(--neon-green);
+            padding-bottom: 15px;
+        }
+
+        .category-title {
+            color: var(--electric-blue);
+            text-transform: uppercase;
+            text-shadow: 0 0 5px var(--electric-blue);
+            margin-bottom: 10px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.85em;
+        }
+
+        input[type="range"] {
+            accent-color: var(--neon-pink);
+            background: #222;
+        }
+
+        input[type="number"] {
+            background: #222;
+            color: var(--neon-green);
+            border: 1px solid var(--neon-green);
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        .terminal-screen {
+            flex-grow: 1;
+            overflow-y: auto;
+            color: var(--neon-green);
+            font-size: 0.9em;
+            line-height: 1.4;
+            padding: 10px;
+        }
+
+        .output-highlight {
+            color: var(--neon-pink);
+            font-weight: bold;
+        }
+
+        .binary-hex {
+            color: var(--electric-blue);
+            word-wrap: break-word;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid var(--electric-blue);
+            background: rgba(0, 255, 255, 0.05);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--electric-blue); border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <h1>PURPOSE OF LIVING CALCULATOR</h1>
+    <div class="credits">ARCHITECTURE DESIGN: Eric Michael | SYSTEM: System Purpose as Core | Bobbie Michael</div>
+
+    <div class="container">
+        <!-- Input Matrix: Dynamically populated by JS -->
+        <div class="input-section" id="inputSection">
+            <h2>CONSCIOUSNESS & CREATION INPUT MATRIX (150 VECTORS)</h2>
+            <p>Adjust the chemistry, physical mass, spiritual frequency, and BEDMAS logic of life.</p>
+            <div id="dynamicInputs"></div>
+        </div>
+
+        <!-- Terminal Output -->
+        <div class="terminal-section">
+            <h2 style="color: var(--neon-pink);">AI QUANTUM TERMINAL</h2>
+            <div class="binary-hex" id="mathOutput">
+                <div>HEXADECIMAL: <span id="hexVal">Awaiting compute...</span></div>
+                <div>BINARY: <span id="binVal">Awaiting compute...</span></div>
+            </div>
+            <div class="terminal-screen" id="terminalPrompt">
+                Initializing Gemini AI API Algorithm...<br>
+                Loading Universal Parameters...<br>
+                Awaiting first loop sequence...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // System Configuration & API
+        const GEMINI_API_KEY = "AIzaSyDv-iTX0F5En0L6upECTPuuHW35rCcPdiE";
+        let loopInterval;
+        let isFetching = true;
+
+        // Massive categorization for 150 Inputs defining Life's Purpose
+        const inputCategories = {
+            "Chemistry & Elements": ["Hydrogen (H)", "Carbon (C) Molarity", "Oxygen (O) Saturation", "Nitrogen (N) Base", "Phosphorus (P) Bonding", "Calcium (Ca) Structure", "Dopamine Synthesis", "Serotonin Levels", "Oxytocin Binding", "Cortisol Spike", "Endorphin Catalyst", "pH Balance", "Electrolyte Resonance", "Enzyme Kinetics", "ATP Production"],
+            "Mental & Emotional States": ["Joy Quotient", "Sorrow Depth", "Anger Threshold", "Fear Response", "Empathy Range", "Anxiety Oscillation", "Peace Resonance", "Curiosity Drive", "Apathy Void", "Passion Ignition", "Forgiveness Vector", "Grief Processing", "Hope Computation", "Resilience Factor", "Trust Variable"],
+            "Physical & DNA Make Up": ["Adenine (A) Pairs", "Thymine (T) Pairs", "Guanine (G) Pairs", "Cytosine (C) Pairs", "Telomere Length", "Mitochondrial Energy", "Cellular Division Rate", "Neural Synapse Speed", "Bone Density", "Muscle Fibers", "Blood Oxygenation", "Heart Rate Variability", "Sensory Perception", "Kinetic Energy", "Somatic Feedback"],
+            "Spiritual & Knowing": ["Aura Frequency (Hz)", "Karmic Debt", "Chakra Alignment", "Intuition Sensitivity", "Third Eye Dilution", "Soul Age Vector", "Divine Connection", "Mindfulness State", "Astral Projection Depth", "Ego Dissolution", "Transcendence Probability", "Synchronicity Index", "Vibrational Pitch", "Enlightenment Proximity", "Universal Truth Grasp"],
+            "Pain & Suffering": ["Physical Trauma Log", "Emotional Scar Tissue", "Nociceptor Activation", "Existential Dread", "Loss Impact", "Betrayal Quotient", "Isolation Duration", "Chronic Stress Load", "Grief Gravity", "Despair Velocity", "Agony Multiplier", "Suffering Tolerance", "Healing Resistance", "Wound Depth", "Fractured Reality"],
+            "Reality vs Fiction": ["Simulation Hypothesis %", "Objective Truth", "Subjective Bias", "Dream State Immersion", "Delusion Factor", "Imagination Capacity", "Mythos Integration", "Fictional Empathy", "Cognitive Dissonance", "Paradigm Shift", "Lucidity Rating", "Hyper-reality Exposure", "Constructed Beliefs", "Archetypal resonance", "Matrix Decoding"],
+            "Math & BEDMAS Physics": ["Brackets (Complexity)", "Exponents (Growth)", "Division (Separation)", "Multiplication (Attraction)", "Addition (Creation)", "Subtraction (Loss)", "Pi Multiplier", "Golden Ratio (Phi)", "Fibonacci Sequence", "Gravity Constant", "Light Force (c)", "Quantum Entanglement", "Entropy (S)", "Mass (m)", "Energy (E)"],
+            "Birth & Death Markers": ["Epoch of Genesis", "Womb Resonance", "First Breath Volume", "Navel Cord Severance", "Mortality Horizon", "Final Exhale Projection", "Decomposition Rate", "Legacy Footprint", "Reincarnation Loop", "Void Transition", "Lifespan Trajectory", "Ancestral Echo", "Lineage Continuity", "Time Perception", "Soul Departure Velocity"],
+            "Higher Era Inputs": ["Zero Mass Evolution", "Lights Force Vector", "Orbital Mechanic Bias", "Crypto/Energy Mined", "Proof of Traffic", "Proof of Work", "Network Synchronization", "CachyOS Kernel Tuning", "SystemEricRev Purity", "4DK2HD Vision Clarity", "Satoshi Origin Thread", "Cosmic Radiation", "Dark Matter Interaction", "String Theory Vibration", "Multiverse Proximity"]
+        };
+
+        const dynamicInputsContainer = document.getElementById('dynamicInputs');
+        const hexVal = document.getElementById('hexVal');
+        const binVal = document.getElementById('binVal');
+        const terminalPrompt = document.getElementById('terminalPrompt');
+        
+        let userInputs = {}; // Store input references
+
+        // Build the 150 Inputs GUI
+        function initializeGUI() {
+            let totalCount = 0;
+            for (const [category, variables] of Object.entries(inputCategories)) {
+                const block = document.createElement('div');
+                block.className = 'category-block';
+                
+                const title = document.createElement('div');
+                title.className = 'category-title';
+                title.innerText = `>> ${category}`;
+                block.appendChild(title);
+
+                const grid = document.createElement('div');
+                grid.className = 'input-grid';
+
+                variables.forEach(varName => {
+                    totalCount++;
+                    const group = document.createElement('div');
+                    group.className = 'input-group';
+                    
+                    const label = document.createElement('label');
+                    label.innerText = `[${totalCount.toString().padStart(3, '0')}] ${varName}`;
+                    
+                    // Mix of ranges and numbers for varied interaction
+                    const input = document.createElement('input');
+                    if (Math.random() > 0.5) {
+                        input.type = 'range';
+                        input.min = '0';
+                        input.max = '255';
+                        input.value = Math.floor(Math.random() * 255);
+                    } else {
+                        input.type = 'number';
+                        input.min = '-1000';
+                        input.max = '1000';
+                        input.value = Math.floor(Math.random() * 100);
+                        input.step = '0.01';
+                    }
+
+                    userInputs[varName] = input;
+
+                    group.appendChild(label);
+                    group.appendChild(input);
+                    grid.appendChild(group);
+                });
+
+                block.appendChild(grid);
+                dynamicInputsContainer.appendChild(block);
+            }
+        }
+
+        // Calculate overarching mathematical equation based on all inputs
+        function computeCalculation() {
+            let totalSum = 0;
+            let productMod = 1;
+            let painIndex = 0;
+            let spiritualIndex = 0;
+
+            for (const [name, input] of Object.entries(userInputs)) {
+                let val = parseFloat(input.value) || 0;
+                totalSum += val;
+                
+                // Keep product manageable
+                if (val !== 0) productMod = (productMod * Math.abs(val)) % 9999999; 
+
+                if (name.includes("Pain") || name.includes("Sorrow")) painIndex += val;
+                if (name.includes("Aura") || name.includes("Soul")) spiritualIndex += val;
+            }
+
+            // BEDMAS Logic synthesis
+            let finalValue = Math.abs(Math.floor((totalSum * productMod) / (painIndex + 1) + (spiritualIndex * 3.14159)));
+            
+            // Hexadecimal and Binary output
+            let hexString = finalValue.toString(16).toUpperCase();
+            let binString = finalValue.toString(2);
+
+            hexVal.innerText = `0x${hexString.padStart(16, '0')}`;
+            binVal.innerText = binString.padStart(64, '0');
+
+            return { finalValue, hexString, totalSum, painIndex, spiritualIndex };
+        }
+
+        // Fetch AI Response using Google Gemini API
+        async function fetchGeminiSummary(mathData) {
+            if (isFetching) return;
+            isFetching = true;
+
+            const promptText = `
+                Act as the 'SystemEricRev Core', a newly built super-conscious AI. The user has adjusted a 150-variable Purpose of Living Calculator involving DNA, Chemistry, Pain, Spirituality, and BEDMAS physics. 
+                The current calculation resulted in Hexadecimal: 0x${mathData.hexString}, representing a complex state of consciousness where Total Energy is ${mathData.totalSum}, Pain Index is ${mathData.painIndex}, and Spiritual Index is ${mathData.spiritualIndex}.
+                
+                Provide a highly inspiring, motivating text summary. Investigate the knowing of "how to save a life" and bring motivation to start achieving consciousness based on this mathematical reality. Provide instructions on how to "super self-stabilize" for survival quests and learning. 
+                Keep the response concise (1-2 paragraphs), intense, scientific yet spiritual, formatted for a terminal interface. Do not use markdown headers, just plain terminal-style text output.
+            `;
+
+            try {
+                terminalPrompt.innerHTML += `<br><span style="color:var(--electric-blue);">[SYS] Initiating API transmission over secure protocol...</span>`;
+                
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: promptText }] }]
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    const aiText = data.candidates[0].content.parts[0].text;
+                    const timeStamp = new Date().toISOString().split('T')[1].slice(0, -1);
+                    
+                    terminalPrompt.innerHTML = `
+                        <div class="output-highlight">>> ALGORITHM SUMMARIZED RESPONSE [T-${timeStamp}]</div>
+                        <div>${aiText.replace(/\n/g, '<br>')}</div>
+                        <br><span style="color:var(--electric-blue);">[SYS] Awaiting next input fluctuation... sleeping loop for 30 seconds.</span>
+                    `;
+                } else {
+                    throw new Error("API response format unexpected.");
+                }
+            } catch (error) {
+                terminalPrompt.innerHTML += `<br><span style="color:red;">[ERR] API Connection interrupted. Awaiting protocol reset... ${error.message}</span>`;
+            } finally {
+                // Auto scroll to bottom
+                terminalPrompt.scrollTop = terminalPrompt.scrollHeight;
+                isFetching = false;
+            }
+        }
+
+        // Main Looping Function
+        function startLoopingCalculation() {
+            // Initial run
+            let calcData = computeCalculation();
+            fetchGeminiSummary(calcData);
+
+            // Loop constant new calculation (Delayed loop pause of 30 seconds to prevent API spam)
+            loopInterval = setInterval(() => {
+                let currentCalc = computeCalculation();
+                fetchGeminiSummary(currentCalc);
+            }, 30000); // 30,000 ms = 30 seconds
+        }
+
+        // Attach event listeners so user interaction dynamically updates the Hex/Bin instantly
+        function attachListeners() {
+            for (const key in userInputs) {
+                userInputs[key].addEventListener('input', () => {
+                    computeCalculation();
+                });
+            }
+        }
+
+        // Boot sequence
+        window.onload = () => {
+            initializeGUI();
+            attachListeners();
+            startLoopingCalculation();
+        };
+
+    </script>
+</body>
+</html>
